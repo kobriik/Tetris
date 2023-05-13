@@ -37,7 +37,7 @@ namespace Tetris.ViewModels
         public ICommand MoveRightCommand { get; set; }
         public ICommand MoveDownCommand { get; set; }
 
-        public Item CurrentItem => RowItems[CurElPosY].ColumnItems[CurElPosX];
+        public Models.Element CurrentItem => RowElements[CurElPosY].ColumnElements[CurElPosX];
 
         private int score;
         public int Score
@@ -74,11 +74,11 @@ namespace Tetris.ViewModels
             set { SetProperty(ref buttonsContentHeight, value); }
         }
 
-        ObservableCollection<RowItem> rowItems;
-        public ObservableCollection<RowItem> RowItems
+        ObservableCollection<RowElement> rowElements;
+        public ObservableCollection<RowElement> RowElements
         {
-            get { return rowItems; }
-            set { SetProperty(ref rowItems, value); }
+            get { return rowElements; }
+            set { SetProperty(ref rowElements, value); }
         }
 
         public MainViewModel()
@@ -87,7 +87,7 @@ namespace Tetris.ViewModels
             MoveRightCommand = new Command(x => MoveRight());
             MoveDownCommand = new Command(x => MoveDown());
 
-            //Příprava velikosti hrací plochy a plochy pro tlačítka
+            //Příprava velikosti hrací plochy a plochy pro tlačítka a score
             PlayContentHeight = (int)(contentHeight * 0.9);
             PlayContentHeight = PlayContentHeight - 50 - (PlayContentHeight % countItemsY);
             PlayContentWidth = contentWidth - (contentWidth % countItemsX);
@@ -95,15 +95,15 @@ namespace Tetris.ViewModels
             ButtonsContentHeight = (int)(contentHeight) - PlayContentHeight - ScoreContentHeight - 20;
 
             //init elementů
-            RowItems = new ObservableCollection<RowItem>();
+            RowElements = new ObservableCollection<RowElement>();
             for (int i = 0; i < countItemsY; i++)
             {
-                var element = new ObservableCollection<Item>();
+                var element = new ObservableCollection<Models.Element>();
                 for (int j = 0; j < countItemsX; j++)
                 {
-                    element.Add(new Item(playContentWidth / 10));
+                    element.Add(new Models.Element(playContentWidth / 10));
                 }
-                RowItems.Add(new RowItem(playContentHeight / 10, element));
+                RowElements.Add(new RowElement(playContentHeight / 10, element));
             }
 
             timer.Interval = 250;
@@ -115,15 +115,15 @@ namespace Tetris.ViewModels
         /// <summary>
         /// Je element blokován k posunu?
         /// </summary>
-        private bool IsBlocked(int x, int y)
+        private bool IsElementBlocked(int x, int y)
         {
-            return RowItems[y].ColumnItems[x].Color != StaticData.DefaultItemColor;
+            return RowElements[y].ColumnElements[x].Color != StaticData.DefaultItemColor;
         }
 
         /// <summary>
         /// Změna polohy elementu
         /// </summary>
-        private void ChangeItemPosition(Direction direction)
+        private void ChangeElementPosition(Direction direction)
         {
             var currentColor = StaticData.Colors.IndexOf(CurrentItem.Color);
             CurrentItem.Color = StaticData.DefaultItemColor;
@@ -143,7 +143,7 @@ namespace Tetris.ViewModels
                     {
                         for (int i = countItemsY - 1; i > 0; i--)
                         {
-                            if (RowItems[i].ColumnItems[CurElPosX].Color == StaticData.DefaultItemColor)
+                            if (RowElements[i].ColumnElements[CurElPosX].Color == StaticData.DefaultItemColor)
                             {
                                 CurElPosY = i;
                                 break;
@@ -160,10 +160,10 @@ namespace Tetris.ViewModels
         /// </summary>
         public void MoveLeft()
         {
-            if (CurElPosX != 0 && CurElPosY != (countItemsY - 1) && !IsBlocked(CurElPosX - 1, CurElPosY) && !IsBlocked(CurElPosX, CurElPosY + 1))
+            if (CurElPosX != 0 && CurElPosY != (countItemsY - 1) && !IsElementBlocked(CurElPosX - 1, CurElPosY) && !IsElementBlocked(CurElPosX, CurElPosY + 1))
             {
                 timer.Stop();
-                ChangeItemPosition(Direction.Left);
+                ChangeElementPosition(Direction.Left);
                 timer.Start();
             }
         }
@@ -173,10 +173,10 @@ namespace Tetris.ViewModels
         /// </summary>
         public void MoveRight()
         {
-            if (CurElPosX != countItemsX - 1 && CurElPosY != (countItemsY - 1) && !IsBlocked(CurElPosX + 1, CurElPosY) && !IsBlocked(CurElPosX, CurElPosY + 1))
+            if (CurElPosX != countItemsX - 1 && CurElPosY != (countItemsY - 1) && !IsElementBlocked(CurElPosX + 1, CurElPosY) && !IsElementBlocked(CurElPosX, CurElPosY + 1))
             {
                 timer.Stop();
-                ChangeItemPosition(Direction.Right);
+                ChangeElementPosition(Direction.Right);
                 timer.Start();
             }
         }
@@ -186,10 +186,10 @@ namespace Tetris.ViewModels
         /// </summary>
         public void MoveDown()
         {
-            if (CurElPosY != (countItemsY - 1) && !IsBlocked(CurElPosX, CurElPosY + 1))
+            if (CurElPosY != (countItemsY - 1) && !IsElementBlocked(CurElPosX, CurElPosY + 1))
             {
                 timer.Stop();
-                ChangeItemPosition(Direction.Bottom);
+                ChangeElementPosition(Direction.Bottom);
                 timer.Start();
             }
         }
@@ -197,17 +197,17 @@ namespace Tetris.ViewModels
         /// <summary>
         /// Sestaví novou strukturu po změně elementů
         /// </summary>
-        public void ReorderItems()
+        public void ReorderElements()
         {
             for (int y = countItemsY - 1; y > 0; y--)
             {
                 for (int x = 0; x < countItemsX; x++)
                 {
-                    if (RowItems[y].ColumnItems[x].Color == StaticData.DefaultItemColor && RowItems[y - 1].ColumnItems[x].Color != StaticData.DefaultItemColor)
+                    if (RowElements[y].ColumnElements[x].Color == StaticData.DefaultItemColor && RowElements[y - 1].ColumnElements[x].Color != StaticData.DefaultItemColor)
                     {
-                        var color = StaticData.Colors.IndexOf(RowItems[y - 1].ColumnItems[x].Color);
-                        RowItems[y].ColumnItems[x].Color = StaticData.Colors[color];
-                        RowItems[y - 1].ColumnItems[x].Color = StaticData.DefaultItemColor;
+                        var color = StaticData.Colors.IndexOf(RowElements[y - 1].ColumnElements[x].Color);
+                        RowElements[y].ColumnElements[x].Color = StaticData.Colors[color];
+                        RowElements[y - 1].ColumnElements[x].Color = StaticData.DefaultItemColor;
                     }
                 }
             }
@@ -239,7 +239,7 @@ namespace Tetris.ViewModels
                         break;
                 }
 
-                if (RowItems[y].ColumnItems[x].Color == RowItems[y + incrementY].ColumnItems[x + incrementX].Color)
+                if (RowElements[y].ColumnElements[x].Color == RowElements[y + incrementY].ColumnElements[x + incrementX].Color)
                     count = Search(x + incrementX, y + incrementY, ++count, direction);
             }
             catch (ArgumentOutOfRangeException)
@@ -255,7 +255,7 @@ namespace Tetris.ViewModels
         /// </summary>
         public bool ProcessElements(int x, int y)
         {
-            if (RowItems[y].ColumnItems[x].Color == StaticData.DefaultItemColor)
+            if (RowElements[y].ColumnElements[x].Color == StaticData.DefaultItemColor)
                 return false;
 
             int countLeft = Search(x, y, 0, Direction.Left);
@@ -267,7 +267,7 @@ namespace Tetris.ViewModels
             {
                 for (int i = x - countLeft; i <= x + countRight; i++)
                 {
-                    RowItems[y].ColumnItems[i].Color = StaticData.DefaultItemColor;
+                    RowElements[y].ColumnElements[i].Color = StaticData.DefaultItemColor;
                 }
             }
 
@@ -275,14 +275,14 @@ namespace Tetris.ViewModels
             {
                 for (int j = y - countTop; j <= y + countBottom; j++)
                 {
-                    RowItems[j].ColumnItems[x].Color = StaticData.DefaultItemColor;
+                    RowElements[j].ColumnElements[x].Color = StaticData.DefaultItemColor;
                 }
             }
 
             if (countLeft + countRight > 1 || countBottom + countTop > 1)
             {
                 Score += (countLeft + countRight + countBottom + countTop) * 5;
-                ReorderItems();
+                ReorderElements();
                 return true;
             }
             return false;
@@ -306,9 +306,9 @@ namespace Tetris.ViewModels
                     if (runningElement)
                     {
                         //Element je na dně nebo nad jiným
-                        if (CurElPosY == (countItemsY - 1) || IsBlocked(CurElPosX, CurElPosY + 1))
+                        if (CurElPosY == (countItemsY - 1) || IsElementBlocked(CurElPosX, CurElPosY + 1))
                         {
-                            //Zpracování, pokud dojde ke změně prochází se rekurzivně celá struktura
+                            //Zpracování, pokud dojde ke změně, prochází se rekurzivně celá struktura
                             if (ProcessElements(CurElPosX, CurElPosY))
                             {
                                 for (int y = countItemsY - 1; y > 0; y--)
@@ -329,7 +329,7 @@ namespace Tetris.ViewModels
                         }
 
                         //Přesun běžícího elementu
-                        ChangeItemPosition(Direction.Down);
+                        ChangeElementPosition(Direction.Down);
                     }
                     else
                     {
@@ -337,14 +337,14 @@ namespace Tetris.ViewModels
                         var x = rnd.Next(countItemsX);
 
                         //Kontrola jestli se má kam posunout, jinak konec hry
-                        if (IsBlocked(x, 0))
+                        if (IsElementBlocked(x, 0))
                         {
                             gameover = true;
                             ShowMessage("Game over, repeat?");
                             return;
                         }
 
-                        RowItems[0].ColumnItems[x].Color = StaticData.GenerateColor();
+                        RowElements[0].ColumnElements[x].Color = StaticData.GenerateColor();
                         CurElPosX = x;
                         CurElPosY = 0;
                         runningElement = true;
@@ -376,7 +376,7 @@ namespace Tetris.ViewModels
                 if (result)
                 {
                     //Nová hra
-                    foreach (var item in RowItems.SelectMany(y => y.ColumnItems))
+                    foreach (var item in RowElements.SelectMany(y => y.ColumnElements))
                     {
                         item.Color = StaticData.DefaultItemColor;
                     }

@@ -30,10 +30,10 @@
                 </Label>
             </Frame>
 
-            <CollectionView Grid.Row="1" ItemsSource="{Binding RowItems, Mode=OneWay}" HorizontalScrollBarVisibility="Never" Margin="0"  >
+            <CollectionView Grid.Row="1" ItemsSource="{Binding RowElements}" HorizontalScrollBarVisibility="Never" Margin="0"  >
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <CollectionView ItemsSource="{Binding ColumnItems, Mode=OneWay}" HorizontalScrollBarVisibility="Never" Margin="0" ItemsLayout="HorizontalList" HeightRequest="{Binding SizeY}"  >
+                        <CollectionView ItemsSource="{Binding ColumnElements}" HorizontalScrollBarVisibility="Never" Margin="0" ItemsLayout="HorizontalList" HeightRequest="{Binding SizeY}"  >
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Frame BackgroundColor="{Binding Color}" WidthRequest="{Binding SizeX}" Margin="0" Padding="0" CornerRadius="0" HasShadow="False">

@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace Tetris.Models
 {
-    public class Item : NotifyPropertyChanged
+    public class Element : NotifyPropertyChanged
     {
         private int sizeX;
 
@@ -22,7 +22,7 @@ namespace Tetris.Models
             set { SetProperty(ref color, value); }
         }
 
-        public Item(int sizeX)
+        public Element(int sizeX)
         {
             SizeX = sizeX;
             Color = StaticData.DefaultItemColor;
