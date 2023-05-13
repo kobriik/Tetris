@@ -4,6 +4,7 @@
              xmlns:viewModels="clr-namespace:Tetris.ViewModels"
              x:Class="Tetris.Views.MainPage">
 
+
     <ContentPage.BindingContext>
         <viewModels:MainViewModel/>
     </ContentPage.BindingContext>
@@ -13,11 +14,23 @@
         <Grid RowSpacing="0" Margin="0" Padding="0">
 
             <Grid.RowDefinitions>
+                <RowDefinition Height="{Binding ScoreContentHeight}" />
                 <RowDefinition Height="{Binding PlayContentHeight}" />
                 <RowDefinition Height="{Binding ButtonsContentHeight}" />
             </Grid.RowDefinitions>
 
-            <CollectionView Grid.Row="0" ItemsSource="{Binding RowItems, Mode=OneWay}" HorizontalScrollBarVisibility="Never" Margin="0"  >
+            <Frame Grid.Row="0" HasShadow="False" BorderColor="Black" Padding="15" Margin="0" HorizontalOptions="FillAndExpand" CornerRadius="0" VerticalOptions="CenterAndExpand">
+                <Label HorizontalOptions="CenterAndExpand">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Score: "></Span>
+                            <Span Text="{Binding Score}"></Span>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </Frame>
+
+            <CollectionView Grid.Row="1" ItemsSource="{Binding RowItems, Mode=OneWay}" HorizontalScrollBarVisibility="Never" Margin="0"  >
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <CollectionView ItemsSource="{Binding ColumnItems, Mode=OneWay}" HorizontalScrollBarVisibility="Never" Margin="0" ItemsLayout="HorizontalList" HeightRequest="{Binding SizeY}"  >
@@ -32,7 +45,7 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="1">
+            <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="1">
                 <Button Text="←" FontSize="Large" HorizontalOptions="FillAndExpand" CornerRadius="0" Command="{Binding MoveLeftCommand}"></Button>
                 <Button Text="→" FontSize="Large" HorizontalOptions="FillAndExpand" CornerRadius="0" Command="{Binding MoveRightCommand}"></Button>
                 <Button Text="↓" FontSize="Large" HorizontalOptions="FillAndExpand" CornerRadius="0" Command="{Binding MoveDownCommand}"></Button>

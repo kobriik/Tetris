@@ -15,7 +15,8 @@ namespace Tetris.ViewModels
         Left = 0,
         Right,
         Down,
-        Bottom
+        Top,
+        Bottom,
     }
 
     public class MainViewModel : NotifyPropertyChanged
@@ -30,12 +31,27 @@ namespace Tetris.ViewModels
         private int CurElPosX = 0;
         private int CurElPosY = 0;
         private bool gameover;
+        private bool timerRunning;
 
         public ICommand MoveLeftCommand { get; set; }
         public ICommand MoveRightCommand { get; set; }
         public ICommand MoveDownCommand { get; set; }
 
         public Item CurrentItem => RowItems[CurElPosY].ColumnItems[CurElPosX];
+
+        private int score;
+        public int Score
+        {
+            get { return score; }
+            set { SetProperty(ref score, value); }
+        }
+
+        private int scoreContentHeight;
+        public int ScoreContentHeight
+        {
+            get { return scoreContentHeight; }
+            set { SetProperty(ref scoreContentHeight, value); }
+        }
 
         private int playContentHeight;
         public int PlayContentHeight
@@ -73,9 +89,10 @@ namespace Tetris.ViewModels
 
             //Příprava velikosti hrací plochy a plochy pro tlačítka
             PlayContentHeight = (int)(contentHeight * 0.9);
-            PlayContentHeight = PlayContentHeight - (PlayContentHeight % countItemsY);
+            PlayContentHeight = PlayContentHeight - 50 - (PlayContentHeight % countItemsY);
             PlayContentWidth = contentWidth - (contentWidth % countItemsX);
-            ButtonsContentHeight = (int)(contentHeight) - PlayContentHeight - 20;
+            ScoreContentHeight = 50;
+            ButtonsContentHeight = (int)(contentHeight) - PlayContentHeight - ScoreContentHeight - 20;
 
             //init elementů
             RowItems = new ObservableCollection<RowItem>();
@@ -180,29 +197,95 @@ namespace Tetris.ViewModels
         /// <summary>
         /// Sestaví novou strukturu po změně elementů
         /// </summary>
-        public void ReorderItems(int x, int y)
+        public void ReorderItems()
         {
-            for (; y > 0; y--)
+            for (int y = countItemsY - 1; y > 0; y--)
             {
-                var color = StaticData.Colors.IndexOf(RowItems[y - 1].ColumnItems[x].Color);
-                RowItems[y].ColumnItems[x].Color = StaticData.Colors[color];
+                for (int x = 0; x < countItemsX; x++)
+                {
+                    if (RowItems[y].ColumnItems[x].Color == StaticData.DefaultItemColor && RowItems[y - 1].ColumnItems[x].Color != StaticData.DefaultItemColor)
+                    {
+                        var color = StaticData.Colors.IndexOf(RowItems[y - 1].ColumnItems[x].Color);
+                        RowItems[y].ColumnItems[x].Color = StaticData.Colors[color];
+                        RowItems[y - 1].ColumnItems[x].Color = StaticData.DefaultItemColor;
+                    }
+                }
             }
-
-            RowItems[0].ColumnItems[x].Color = StaticData.DefaultItemColor;
         }
 
         /// <summary>
-        /// Vrátí počet stejných elementů vedle sebe
+        /// Vrátí počet stejných elementů vedle
         /// </summary>
-        public int Search(int x, int y, int count)
+        public int Search(int x, int y, int count, Direction direction)
         {
-            if (x == countItemsX - 1)
-                return count;
+            try
+            {
+                int incrementX = 0;
+                int incrementY = 0;
 
-            if (RowItems[y].ColumnItems[x].Color == RowItems[y].ColumnItems[x + 1].Color)
-                count = Search(x + 1, y, ++count);
+                switch (direction)
+                {
+                    case Direction.Left:
+                        incrementX--;
+                        break;
+                    case Direction.Right:
+                        incrementX++;
+                        break;
+                    case Direction.Down:
+                        incrementY++;
+                        break;
+                    case Direction.Top:
+                        incrementY--;
+                        break;
+                }
+
+                if (RowItems[y].ColumnItems[x].Color == RowItems[y + incrementY].ColumnItems[x + incrementX].Color)
+                    count = Search(x + incrementX, y + incrementY, ++count, direction);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return count;
+            }
 
             return count;
+        }
+
+        /// <summary>
+        /// Zpracování elementů, pokud dojde ke změně struktury vrátí true
+        /// </summary>
+        public bool ProcessElements(int x, int y)
+        {
+            if (RowItems[y].ColumnItems[x].Color == StaticData.DefaultItemColor)
+                return false;
+
+            int countLeft = Search(x, y, 0, Direction.Left);
+            int countRight = Search(x, y, 0, Direction.Right);
+            int countTop = Search(x, y, 0, Direction.Top);
+            int countBottom = Search(x, y, 0, Direction.Down);
+
+            if (countLeft + countRight > 1)
+            {
+                for (int i = x - countLeft; i <= x + countRight; i++)
+                {
+                    RowItems[y].ColumnItems[i].Color = StaticData.DefaultItemColor;
+                }
+            }
+
+            if (countBottom + countTop > 1)
+            {
+                for (int j = y - countTop; j <= y + countBottom; j++)
+                {
+                    RowItems[j].ColumnItems[x].Color = StaticData.DefaultItemColor;
+                }
+            }
+
+            if (countLeft + countRight > 1 || countBottom + countTop > 1)
+            {
+                Score += (countLeft + countRight + countBottom + countTop) * 5;
+                ReorderItems();
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -210,8 +293,12 @@ namespace Tetris.ViewModels
         /// </summary>
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            if (timerRunning) return;
+
             try
             {
+                timerRunning = true;
+
                 //Hra stále běží
                 if (!gameover)
                 {
@@ -221,37 +308,22 @@ namespace Tetris.ViewModels
                         //Element je na dně nebo nad jiným
                         if (CurElPosY == (countItemsY - 1) || IsBlocked(CurElPosX, CurElPosY + 1))
                         {
-                            //Kontrola
-                            bool continueLoop = true;
-                            while (true)
+                            //Zpracování, pokud dojde ke změně prochází se rekurzivně celá struktura
+                            if (ProcessElements(CurElPosX, CurElPosY))
                             {
-                                if (!continueLoop)
-                                    break;
-
-                                continueLoop = false;
-                                for (int y = countItemsY - 1; y >= 0; y--)
+                                for (int y = countItemsY - 1; y > 0; y--)
                                 {
-                                    for (int x = 0; x < countItemsX - 2; x++)
+                                    for (int x = 0; x < countItemsX; x++)
                                     {
-                                        if (RowItems[y].ColumnItems[x].Color == StaticData.DefaultItemColor)
-                                            continue;
-
-                                        var count = Search(x, y, 1);
-                                        if (count >= 3)
+                                        if (ProcessElements(x, y))
                                         {
-                                            for (; count > 0; count--)
-                                            {
-                                                RowItems[y].ColumnItems[x + count - 1].Color = StaticData.DefaultItemColor;
-                                                ReorderItems(x + count - 1, y);
-                                                continueLoop = true;
-                                            }
+                                            y = countItemsY - 1;
+                                            x = 0;
                                         }
                                     }
-
-                                    if (continueLoop)
-                                        break;
                                 }
                             }
+
                             runningElement = false;
                             return;
                         }
@@ -281,9 +353,14 @@ namespace Tetris.ViewModels
             }
             catch (Exception ex)
             {
+                gameover = true;
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.StackTrace);
                 ShowMessage("Uknown error, repeat?");
+            }
+            finally
+            {
+                timerRunning = false;
             }
         }
 
@@ -295,7 +372,7 @@ namespace Tetris.ViewModels
         {
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                var result = await App.Current.MainPage.DisplayAlert("Alert", message, "Yes", "No");
+                var result = await App.Current.MainPage.DisplayAlert("Alert", $"{score}{Environment.NewLine}{message}", "Yes", "No");
                 if (result)
                 {
                     //Nová hra
@@ -304,6 +381,7 @@ namespace Tetris.ViewModels
                         item.Color = StaticData.DefaultItemColor;
                     }
                     gameover = false;
+                    Score = 0;
                 }
                 else
                 {
