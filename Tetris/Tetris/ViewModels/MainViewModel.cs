@@ -90,7 +90,7 @@ namespace Tetris.ViewModels
             }
 
             timer.Interval = 250;
-            timer.Elapsed += _timer_Elapsed;
+            timer.Elapsed += Timer_Elapsed;
             timer.Start();
 
         }
@@ -208,7 +208,7 @@ namespace Tetris.ViewModels
         /// <summary>
         /// Nekonečná smyčka při hře
         /// </summary>
-        private void _timer_Elapsed(object sender, ElapsedEventArgs e)
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             try
             {
