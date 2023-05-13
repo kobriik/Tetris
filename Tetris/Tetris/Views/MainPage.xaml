@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Tetris.ViewModels"
+             x:Class="Tetris.Views.MainPage">
+
+    <ContentPage.BindingContext>
+        <viewModels:MainViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+
+        <Grid RowSpacing="0" Margin="0" Padding="0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="{Binding PlayContentHeight}" />
+                <RowDefinition Height="{Binding ButtonsContentHeight}" />
+            </Grid.RowDefinitions>
+
+            <CollectionView Grid.Row="0" ItemsSource="{Binding RowItems, Mode=OneWay}" HorizontalScrollBarVisibility="Never" Margin="0"  >
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <CollectionView ItemsSource="{Binding ColumnItems, Mode=OneWay}" HorizontalScrollBarVisibility="Never" Margin="0" ItemsLayout="HorizontalList" HeightRequest="{Binding SizeY}"  >
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame BackgroundColor="{Binding Color}" WidthRequest="{Binding SizeX}" Margin="0" Padding="0" CornerRadius="0" HasShadow="False">
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="1">
+                <Button Text="←" FontSize="Large" HorizontalOptions="FillAndExpand" CornerRadius="0" Command="{Binding MoveLeftCommand}"></Button>
+                <Button Text="→" FontSize="Large" HorizontalOptions="FillAndExpand" CornerRadius="0" Command="{Binding MoveRightCommand}"></Button>
+                <Button Text="↓" FontSize="Large" HorizontalOptions="FillAndExpand" CornerRadius="0" Command="{Binding MoveDownCommand}"></Button>
+            </StackLayout>
+
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>
