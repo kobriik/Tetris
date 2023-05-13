@@ -372,7 +372,7 @@ namespace Tetris.ViewModels
         {
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                var result = await App.Current.MainPage.DisplayAlert("Alert", $"{score}{Environment.NewLine}{message}", "Yes", "No");
+                var result = await App.Current.MainPage.DisplayAlert("Alert", $"Score: {score}{Environment.NewLine}{message}", "Yes", "No");
                 if (result)
                 {
                     //Nová hra
