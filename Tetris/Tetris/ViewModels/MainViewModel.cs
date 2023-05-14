@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Timers;
@@ -35,7 +36,7 @@ namespace Tetris.ViewModels
         public ICommand MoveRightCommand { get; set; }
         public ICommand MoveDownCommand { get; set; }
 
-        public Models.Element CurrentItem => RowElements[curPosY].ColumnElements[curPosX];
+        public Models.Element CurrentItem => RowElements[curPosY][curPosX];
 
         private int score;
         public int Score
@@ -44,9 +45,8 @@ namespace Tetris.ViewModels
             set { SetProperty(ref score, value); }
         }
 
-   
-        ObservableCollection<RowElement> rowElements;
-        public ObservableCollection<RowElement> RowElements
+        ObservableCollection<ObservableCollection<Models.Element>> rowElements;
+        public ObservableCollection<ObservableCollection<Models.Element>> RowElements
         {
             get { return rowElements; }
             set { SetProperty(ref rowElements, value); }
@@ -55,9 +55,9 @@ namespace Tetris.ViewModels
         /// <summary>
         /// Jen pro unit Testy
         /// </summary>
-        public MainViewModel(ObservableCollection<RowElement> elements, int x = 0, int y = 0)
+        public MainViewModel(ObservableCollection<ObservableCollection<Models.Element>> rowElements, int x = 0, int y = 0)
         {
-            RowElements = elements;
+            RowElements = rowElements;
             curPosX = x;
             curPosY = y;
         }
@@ -69,15 +69,15 @@ namespace Tetris.ViewModels
             MoveDownCommand = new Command(x => MoveDown());
 
             //init elementů
-            RowElements = new ObservableCollection<RowElement>();
+            RowElements = new ObservableCollection<ObservableCollection<Models.Element>>();
             for (int i = 0; i < countItemsY; i++)
             {
-                var element = new ObservableCollection<Models.Element>();
+                var elements = new ObservableCollection<Models.Element>();
                 for (int j = 0; j < countItemsX; j++)
                 {
-                    element.Add(new Models.Element());
+                    elements.Add(new Models.Element());
                 }
-                RowElements.Add(new RowElement(element));
+                RowElements.Add(elements);
             }
 
             timer.Interval = 250;
@@ -90,7 +90,7 @@ namespace Tetris.ViewModels
         /// </summary>
         public bool IsElementBlocked(int x, int y)
         {
-            return RowElements[y].ColumnElements[x].Color != StaticData.DefaultItemColor;
+            return RowElements[y][x].Color != StaticData.DefaultItemColor;
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Tetris.ViewModels
                     {
                         for (int i = countItemsY - 1; i > 0; i--)
                         {
-                            if (RowElements[i].ColumnElements[curPosX].Color == StaticData.DefaultItemColor)
+                            if (RowElements[i][curPosX].Color == StaticData.DefaultItemColor)
                             {
                                 curPosY = i;
                                 break;
@@ -170,11 +170,11 @@ namespace Tetris.ViewModels
             {
                 for (int x = 0; x < countItemsX; x++)
                 {
-                    if (RowElements[y].ColumnElements[x].Color == StaticData.DefaultItemColor && RowElements[y - 1].ColumnElements[x].Color != StaticData.DefaultItemColor)
+                    if (RowElements[y][x].Color == StaticData.DefaultItemColor && RowElements[y - 1][x].Color != StaticData.DefaultItemColor)
                     {
-                        var color = StaticData.Colors.IndexOf(RowElements[y - 1].ColumnElements[x].Color);
-                        RowElements[y].ColumnElements[x].Color = StaticData.Colors[color];
-                        RowElements[y - 1].ColumnElements[x].Color = StaticData.DefaultItemColor;
+                        var color = StaticData.Colors.IndexOf(RowElements[y - 1][x].Color);
+                        RowElements[y][x].Color = StaticData.Colors[color];
+                        RowElements[y - 1][x].Color = StaticData.DefaultItemColor;
                     }
                 }
             }
@@ -206,7 +206,7 @@ namespace Tetris.ViewModels
                         break;
                 }
 
-                if (RowElements[y].ColumnElements[x].Color == RowElements[y + incrementY].ColumnElements[x + incrementX].Color)
+                if (RowElements[y][x].Color == RowElements[y + incrementY][x + incrementX].Color)
                     count = SearchSiblings(x + incrementX, y + incrementY, ++count, direction);
             }
             catch (ArgumentOutOfRangeException)
@@ -222,7 +222,7 @@ namespace Tetris.ViewModels
         /// </summary>
         public bool ProcessElements(int x, int y)
         {
-            if (RowElements[y].ColumnElements[x].Color == StaticData.DefaultItemColor)
+            if (RowElements[y][x].Color == StaticData.DefaultItemColor)
                 return false;
 
             int countLeft = SearchSiblings(x, y, 0, Direction.Left);
@@ -234,7 +234,7 @@ namespace Tetris.ViewModels
             {
                 for (int i = x - countLeft; i <= x + countRight; i++)
                 {
-                    RowElements[y].ColumnElements[i].Color = StaticData.DefaultItemColor;
+                    RowElements[y][i].Color = StaticData.DefaultItemColor;
                 }
             }
 
@@ -242,7 +242,7 @@ namespace Tetris.ViewModels
             {
                 for (int j = y - countTop; j <= y + countBottom; j++)
                 {
-                    RowElements[j].ColumnElements[x].Color = StaticData.DefaultItemColor;
+                    RowElements[j][x].Color = StaticData.DefaultItemColor;
                 }
             }
 
@@ -312,7 +312,7 @@ namespace Tetris.ViewModels
                             return;
                         }
 
-                        RowElements[0].ColumnElements[x].Color = StaticData.GenerateColor();
+                        RowElements[0][x].Color = StaticData.GenerateColor();
                         curPosX = x;
                         curPosY = 0;
                         runningElement = true;
@@ -344,7 +344,7 @@ namespace Tetris.ViewModels
                 if (result)
                 {
                     //Nová hra
-                    foreach (var item in RowElements.SelectMany(y => y.ColumnElements))
+                    foreach (var item in RowElements.SelectMany(y => y))
                     {
                         item.Color = StaticData.DefaultItemColor;
                     }

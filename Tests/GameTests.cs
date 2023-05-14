@@ -13,21 +13,21 @@ namespace Tests
 
         private MainViewModel Init(int x = 0, int y = 0)
         {
-            var rowElements = new ObservableCollection<RowElement>();
+            var rowElements = new ObservableCollection<ObservableCollection<Tetris.Models.Element>>();
             for (int i = 0; i < 10; i++)
             {
-                var element = new ObservableCollection<Tetris.Models.Element>();
+                var elements = new ObservableCollection<Tetris.Models.Element>();
                 for (int j = 0; j < 10; j++)
                 {
-                    element.Add(new Tetris.Models.Element());
+                    elements.Add(new Tetris.Models.Element());
                 }
-                rowElements.Add(new RowElement(element));
+                rowElements.Add(elements);
             }
 
-            rowElements[2].ColumnElements[2].Color = testColor;
-            rowElements[3].ColumnElements[2].Color = testColor;
-            rowElements[3].ColumnElements[3].Color = testColor;
-            rowElements[3].ColumnElements[4].Color = testColor;
+            rowElements[2][2].Color = testColor;
+            rowElements[3][2].Color = testColor;
+            rowElements[3][3].Color = testColor;
+            rowElements[3][4].Color = testColor;
 
             return new MainViewModel(rowElements, x, y);
         }
@@ -62,8 +62,8 @@ namespace Tests
         {
             var vm = Init();
             vm.ReorderElements();
-            Assert.AreEqual(Color.White, vm.RowElements[2].ColumnElements[2].Color);
-            Assert.AreEqual(testColor, vm.RowElements[3].ColumnElements[2].Color);
+            Assert.AreEqual(Color.White, vm.RowElements[2][2].Color);
+            Assert.AreEqual(testColor, vm.RowElements[3][2].Color);
         }
 
         /// <summary>
@@ -74,8 +74,8 @@ namespace Tests
         {
             var vm = Init();
             vm.ProcessElements(3, 3);
-            Assert.AreEqual(Color.White, vm.RowElements[2].ColumnElements[2].Color);
-            Assert.AreEqual(testColor, vm.RowElements[3].ColumnElements[2].Color);
+            Assert.AreEqual(Color.White, vm.RowElements[2][2].Color);
+            Assert.AreEqual(testColor, vm.RowElements[3][2].Color);
         }
 
         /// <summary>
@@ -87,8 +87,8 @@ namespace Tests
             var vm = Init(3,3);
             vm.ChangeElementPosition(Direction.Bottom);
 
-            Assert.AreEqual(testColor, vm.RowElements[9].ColumnElements[3].Color);
-            Assert.AreEqual(Color.White, vm.RowElements[3].ColumnElements[3].Color);
+            Assert.AreEqual(testColor, vm.RowElements[9][3].Color);
+            Assert.AreEqual(Color.White, vm.RowElements[3][3].Color);
         }
 
         /// <summary>
@@ -100,16 +100,16 @@ namespace Tests
             var vm = Init(2,3);
 
             vm.MoveLeft();
-            Assert.AreEqual(Color.White, vm.RowElements[3].ColumnElements[2].Color);
-            Assert.AreEqual(testColor, vm.RowElements[3].ColumnElements[1].Color);
+            Assert.AreEqual(Color.White, vm.RowElements[3][2].Color);
+            Assert.AreEqual(testColor, vm.RowElements[3][1].Color);
 
             vm.MoveRight();
-            Assert.AreEqual(testColor, vm.RowElements[3].ColumnElements[2].Color);
-            Assert.AreEqual(Color.White, vm.RowElements[3].ColumnElements[1].Color);
+            Assert.AreEqual(testColor, vm.RowElements[3][2].Color);
+            Assert.AreEqual(Color.White, vm.RowElements[3][1].Color);
 
             vm.MoveDown();
-            Assert.AreEqual(Color.White, vm.RowElements[3].ColumnElements[2].Color);
-            Assert.AreEqual(testColor, vm.RowElements[9].ColumnElements[2].Color);
+            Assert.AreEqual(Color.White, vm.RowElements[3][2].Color);
+            Assert.AreEqual(testColor, vm.RowElements[9][2].Color);
         }
     }
 }
