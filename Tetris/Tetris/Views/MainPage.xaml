@@ -29,29 +29,28 @@
                     </Label.FormattedText>
                 </Label>
             </StackLayout>
-                        
-            <StackLayout Grid.Row="1" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
-                <StackLayout BindableLayout.ItemsSource="{Binding Elements}" Spacing="1" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <StackLayout BindableLayout.ItemsSource="{Binding .}" Orientation="Horizontal"  Spacing="1" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid RowSpacing="0" ColumnSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="*"/>
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <BoxView BackgroundColor="{Binding Color}"></BoxView>
-                                        </Grid>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </StackLayout>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </StackLayout>
+
+
+            <StackLayout  Grid.Row="1" BindableLayout.ItemsSource="{Binding Elements}" Spacing="1" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout BindableLayout.ItemsSource="{Binding .}" Orientation="Horizontal"  Spacing="1" HorizontalOptions="FillAndExpand" >
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid RowSpacing="0" ColumnSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <BoxView BackgroundColor="{Binding Color}"></BoxView>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
             </StackLayout>
 
             <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="1">
