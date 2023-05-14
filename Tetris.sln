@@ -7,7 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tetris.Android", "Tetris\Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tetris.iOS", "Tetris\Tetris.iOS\Tetris.iOS.csproj", "{D648E4EC-069D-4E79-8E9D-D5E14A7B1B28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tetris", "Tetris\Tetris\Tetris.csproj", "{6A4C663F-607D-4680-B15D-3F4B8B81ACD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tetris", "Tetris\Tetris\Tetris.csproj", "{6A4C663F-607D-4680-B15D-3F4B8B81ACD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{6BDEB344-907F-482C-A665-D651E7E2D551}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,18 @@ Global
 		{6A4C663F-607D-4680-B15D-3F4B8B81ACD8}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{6A4C663F-607D-4680-B15D-3F4B8B81ACD8}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{6A4C663F-607D-4680-B15D-3F4B8B81ACD8}.Release|iPhoneSimulator.Deploy.0 = Release|Any CPU
+		{6BDEB344-907F-482C-A665-D651E7E2D551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BDEB344-907F-482C-A665-D651E7E2D551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BDEB344-907F-482C-A665-D651E7E2D551}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{6BDEB344-907F-482C-A665-D651E7E2D551}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{6BDEB344-907F-482C-A665-D651E7E2D551}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{6BDEB344-907F-482C-A665-D651E7E2D551}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{6BDEB344-907F-482C-A665-D651E7E2D551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BDEB344-907F-482C-A665-D651E7E2D551}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BDEB344-907F-482C-A665-D651E7E2D551}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{6BDEB344-907F-482C-A665-D651E7E2D551}.Release|iPhone.Build.0 = Release|Any CPU
+		{6BDEB344-907F-482C-A665-D651E7E2D551}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{6BDEB344-907F-482C-A665-D651E7E2D551}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
