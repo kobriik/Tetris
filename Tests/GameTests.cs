@@ -1,6 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.ObjectModel;
-using Tetris.Models;
 using Tetris.ViewModels;
 using Xamarin.Forms;
 
@@ -45,7 +43,7 @@ namespace Tests
         }
 
         /// <summary>
-        /// otestuje blokování elementů
+        /// otestuje reorganizaci struktury
         /// </summary>
         [TestMethod]
         public void TestReorderElements()
@@ -74,7 +72,7 @@ namespace Tests
         [TestMethod]
         public void TestChangePosition()
         {
-            var vm = Init(3,3);
+            var vm = Init(3, 3);
             vm.ChangeElementPosition(Direction.Bottom);
 
             Assert.AreEqual(testColor, vm.Elements[9][3].Color);
@@ -87,7 +85,7 @@ namespace Tests
         [TestMethod]
         public void TestChangeDirections()
         {
-            var vm = Init(2,3);
+            var vm = Init(2, 3);
 
             vm.MoveLeft();
             Assert.AreEqual(Color.White, vm.Elements[3][2].Color);

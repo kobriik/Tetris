@@ -30,11 +30,10 @@
                 </Label>
             </StackLayout>
 
-
             <StackLayout  Grid.Row="1" BindableLayout.ItemsSource="{Binding Elements}" Spacing="1" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout BindableLayout.ItemsSource="{Binding .}" Orientation="Horizontal"  Spacing="1" HorizontalOptions="FillAndExpand" >
+                        <StackLayout BindableLayout.ItemsSource="{Binding .}" Orientation="Horizontal"  Spacing="1" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
                                     <Grid RowSpacing="0" ColumnSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
