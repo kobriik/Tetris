@@ -22,8 +22,8 @@ namespace Tetris.ViewModels
     {
         private readonly Timer timer = new Timer();
         private readonly Random rnd = new Random();
-        private readonly int countItemsY = 10;
-        private readonly int countItemsX = 10;
+        private readonly int countEl = 10;
+        private readonly int countEl = 10;
         private bool runningElement;
         private int curPosX = 0;
         private int curPosY = 0;
@@ -103,7 +103,7 @@ namespace Tetris.ViewModels
                     break;
                 case Direction.Bottom:
                     {
-                        for (int i = countItemsY - 1; i > 0; i--)
+                        for (int i = countEl - 1; i > 0; i--)
                         {
                             if (Elements[i][curPosX].Color == StaticData.DefaultItemColor)
                             {
@@ -122,7 +122,7 @@ namespace Tetris.ViewModels
         /// </summary>
         public void MoveLeft()
         {
-            if (curPosX != 0 && curPosY != (countItemsY - 1) && !IsElementBlocked(curPosX - 1, curPosY) && !IsElementBlocked(curPosX, curPosY + 1))
+            if (curPosX != 0 && curPosY != (countEl - 1) && !IsElementBlocked(curPosX - 1, curPosY) && !IsElementBlocked(curPosX, curPosY + 1))
             {
                 ChangeElementPosition(Direction.Left);
             }
@@ -133,7 +133,7 @@ namespace Tetris.ViewModels
         /// </summary>
         public void MoveRight()
         {
-            if (curPosX != countItemsX - 1 && curPosY != (countItemsY - 1) && !IsElementBlocked(curPosX + 1, curPosY) && !IsElementBlocked(curPosX, curPosY + 1))
+            if (curPosX != countEl - 1 && curPosY != (countEl - 1) && !IsElementBlocked(curPosX + 1, curPosY) && !IsElementBlocked(curPosX, curPosY + 1))
             {
                 ChangeElementPosition(Direction.Right);
             }
@@ -144,7 +144,7 @@ namespace Tetris.ViewModels
         /// </summary>
         public void MoveDown()
         {
-            if (curPosY != (countItemsY - 1) && !IsElementBlocked(curPosX, curPosY + 1))
+            if (curPosY != (countEl - 1) && !IsElementBlocked(curPosX, curPosY + 1))
             {
                 ChangeElementPosition(Direction.Bottom);
             }
@@ -155,9 +155,9 @@ namespace Tetris.ViewModels
         /// </summary>
         public void ReorderElements()
         {
-            for (int y = countItemsY - 1; y > 0; y--)
+            for (int y = countEl - 1; y > 0; y--)
             {
-                for (int x = 0; x < countItemsX; x++)
+                for (int x = 0; x < countEl; x++)
                 {
                     if (Elements[y][x].Color == StaticData.DefaultItemColor && Elements[y - 1][x].Color != StaticData.DefaultItemColor)
                     {
@@ -262,19 +262,19 @@ namespace Tetris.ViewModels
                     if (runningElement)
                     {
                         //Element je na dně nebo nad jiným
-                        if (curPosY == (countItemsY - 1) || IsElementBlocked(curPosX, curPosY + 1))
+                        if (curPosY == (countEl - 1) || IsElementBlocked(curPosX, curPosY + 1))
                         {
                             //Zpracování, pokud dojde ke změně, prochází se znovu celá struktura
                             if (ProcessElements(curPosX, curPosY))
                             {
-                                for (int y = countItemsY - 1; y > 0; y--)
+                                for (int y = countEl - 1; y > 0; y--)
                                 {
-                                    for (int x = 0; x < countItemsX; x++)
+                                    for (int x = 0; x < countEl; x++)
                                     {
                                         if (ProcessElements(x, y))
                                         {
                                             //opět byla změna a je potřeba začít znovu
-                                            y = countItemsY - 1;
+                                            y = countEl - 1;
                                             x = 0;
                                         }
                                     }
@@ -291,7 +291,7 @@ namespace Tetris.ViewModels
                     else
                     {
                         //výběr náhodného začátku elementu
-                        var x = rnd.Next(countItemsX);
+                        var x = rnd.Next(countEl);
 
                         //Kontrola jestli se má kam posunout, jinak konec hry
                         if (IsElementBlocked(x, 0))
