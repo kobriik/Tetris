@@ -36,7 +36,7 @@ namespace Tetris.ViewModels
         public ICommand MoveRightCommand { get; set; }
         public ICommand MoveDownCommand { get; set; }
 
-        public Models.Element CurrentItem => RowElements[curPosY][curPosX];
+        public Models.Element CurrentItem => Elements[curPosY][curPosX];
 
         private int score;
         public int Score
@@ -45,11 +45,11 @@ namespace Tetris.ViewModels
             set { SetProperty(ref score, value); }
         }
 
-        ObservableCollection<ObservableCollection<Models.Element>> rowElements;
-        public ObservableCollection<ObservableCollection<Models.Element>> RowElements
+        ObservableCollection<ObservableCollection<Models.Element>> elements;
+        public ObservableCollection<ObservableCollection<Models.Element>> Elements
         {
-            get { return rowElements; }
-            set { SetProperty(ref rowElements, value); }
+            get { return elements; }
+            set { SetProperty(ref elements, value); }
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Tetris.ViewModels
         /// </summary>
         public MainViewModel(ObservableCollection<ObservableCollection<Models.Element>> rowElements, int x = 0, int y = 0)
         {
-            RowElements = rowElements;
+            Elements = rowElements;
             curPosX = x;
             curPosY = y;
         }
@@ -69,7 +69,7 @@ namespace Tetris.ViewModels
             MoveDownCommand = new Command(x => MoveDown());
 
             //init elementů
-            RowElements = new ObservableCollection<ObservableCollection<Models.Element>>();
+            Elements = new ObservableCollection<ObservableCollection<Models.Element>>();
             for (int i = 0; i < countItemsY; i++)
             {
                 var elements = new ObservableCollection<Models.Element>();
@@ -77,7 +77,7 @@ namespace Tetris.ViewModels
                 {
                     elements.Add(new Models.Element());
                 }
-                RowElements.Add(elements);
+                Elements.Add(elements);
             }
 
             timer.Interval = 250;
@@ -90,7 +90,7 @@ namespace Tetris.ViewModels
         /// </summary>
         public bool IsElementBlocked(int x, int y)
         {
-            return RowElements[y][x].Color != StaticData.DefaultItemColor;
+            return Elements[y][x].Color != StaticData.DefaultItemColor;
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Tetris.ViewModels
                     {
                         for (int i = countItemsY - 1; i > 0; i--)
                         {
-                            if (RowElements[i][curPosX].Color == StaticData.DefaultItemColor)
+                            if (Elements[i][curPosX].Color == StaticData.DefaultItemColor)
                             {
                                 curPosY = i;
                                 break;
@@ -170,11 +170,11 @@ namespace Tetris.ViewModels
             {
                 for (int x = 0; x < countItemsX; x++)
                 {
-                    if (RowElements[y][x].Color == StaticData.DefaultItemColor && RowElements[y - 1][x].Color != StaticData.DefaultItemColor)
+                    if (Elements[y][x].Color == StaticData.DefaultItemColor && Elements[y - 1][x].Color != StaticData.DefaultItemColor)
                     {
-                        var color = StaticData.Colors.IndexOf(RowElements[y - 1][x].Color);
-                        RowElements[y][x].Color = StaticData.Colors[color];
-                        RowElements[y - 1][x].Color = StaticData.DefaultItemColor;
+                        var color = StaticData.Colors.IndexOf(Elements[y - 1][x].Color);
+                        Elements[y][x].Color = StaticData.Colors[color];
+                        Elements[y - 1][x].Color = StaticData.DefaultItemColor;
                     }
                 }
             }
@@ -206,7 +206,7 @@ namespace Tetris.ViewModels
                         break;
                 }
 
-                if (RowElements[y][x].Color == RowElements[y + incrementY][x + incrementX].Color)
+                if (Elements[y][x].Color == Elements[y + incrementY][x + incrementX].Color)
                     count = SearchSiblings(x + incrementX, y + incrementY, ++count, direction);
             }
             catch (ArgumentOutOfRangeException)
@@ -222,7 +222,7 @@ namespace Tetris.ViewModels
         /// </summary>
         public bool ProcessElements(int x, int y)
         {
-            if (RowElements[y][x].Color == StaticData.DefaultItemColor)
+            if (Elements[y][x].Color == StaticData.DefaultItemColor)
                 return false;
 
             int countLeft = SearchSiblings(x, y, 0, Direction.Left);
@@ -234,7 +234,7 @@ namespace Tetris.ViewModels
             {
                 for (int i = x - countLeft; i <= x + countRight; i++)
                 {
-                    RowElements[y][i].Color = StaticData.DefaultItemColor;
+                    Elements[y][i].Color = StaticData.DefaultItemColor;
                 }
             }
 
@@ -242,7 +242,7 @@ namespace Tetris.ViewModels
             {
                 for (int j = y - countTop; j <= y + countBottom; j++)
                 {
-                    RowElements[j][x].Color = StaticData.DefaultItemColor;
+                    Elements[j][x].Color = StaticData.DefaultItemColor;
                 }
             }
 
@@ -312,7 +312,7 @@ namespace Tetris.ViewModels
                             return;
                         }
 
-                        RowElements[0][x].Color = StaticData.GenerateColor();
+                        Elements[0][x].Color = StaticData.GenerateColor();
                         curPosX = x;
                         curPosY = 0;
                         runningElement = true;
@@ -344,7 +344,7 @@ namespace Tetris.ViewModels
                 if (result)
                 {
                     //Nová hra
-                    foreach (var item in RowElements.SelectMany(y => y))
+                    foreach (var item in Elements.SelectMany(y => y))
                     {
                         item.Color = StaticData.DefaultItemColor;
                     }

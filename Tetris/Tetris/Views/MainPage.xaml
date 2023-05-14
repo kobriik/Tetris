@@ -31,7 +31,7 @@
             </StackLayout>
                         
             <StackLayout Grid.Row="1" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
-                <StackLayout BindableLayout.ItemsSource="{Binding RowElements}" Spacing="1" VerticalOptions="FillAndExpand" >
+                <StackLayout BindableLayout.ItemsSource="{Binding Elements}" Spacing="1" VerticalOptions="FillAndExpand" >
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
                             <StackLayout BindableLayout.ItemsSource="{Binding .}" Orientation="Horizontal" Spacing="1" VerticalOptions="FillAndExpand" >

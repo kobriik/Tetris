@@ -62,8 +62,8 @@ namespace Tests
         {
             var vm = Init();
             vm.ReorderElements();
-            Assert.AreEqual(Color.White, vm.RowElements[2][2].Color);
-            Assert.AreEqual(testColor, vm.RowElements[3][2].Color);
+            Assert.AreEqual(Color.White, vm.Elements[2][2].Color);
+            Assert.AreEqual(testColor, vm.Elements[3][2].Color);
         }
 
         /// <summary>
@@ -74,8 +74,8 @@ namespace Tests
         {
             var vm = Init();
             vm.ProcessElements(3, 3);
-            Assert.AreEqual(Color.White, vm.RowElements[2][2].Color);
-            Assert.AreEqual(testColor, vm.RowElements[3][2].Color);
+            Assert.AreEqual(Color.White, vm.Elements[2][2].Color);
+            Assert.AreEqual(testColor, vm.Elements[3][2].Color);
         }
 
         /// <summary>
@@ -87,8 +87,8 @@ namespace Tests
             var vm = Init(3,3);
             vm.ChangeElementPosition(Direction.Bottom);
 
-            Assert.AreEqual(testColor, vm.RowElements[9][3].Color);
-            Assert.AreEqual(Color.White, vm.RowElements[3][3].Color);
+            Assert.AreEqual(testColor, vm.Elements[9][3].Color);
+            Assert.AreEqual(Color.White, vm.Elements[3][3].Color);
         }
 
         /// <summary>
@@ -100,16 +100,16 @@ namespace Tests
             var vm = Init(2,3);
 
             vm.MoveLeft();
-            Assert.AreEqual(Color.White, vm.RowElements[3][2].Color);
-            Assert.AreEqual(testColor, vm.RowElements[3][1].Color);
+            Assert.AreEqual(Color.White, vm.Elements[3][2].Color);
+            Assert.AreEqual(testColor, vm.Elements[3][1].Color);
 
             vm.MoveRight();
-            Assert.AreEqual(testColor, vm.RowElements[3][2].Color);
-            Assert.AreEqual(Color.White, vm.RowElements[3][1].Color);
+            Assert.AreEqual(testColor, vm.Elements[3][2].Color);
+            Assert.AreEqual(Color.White, vm.Elements[3][1].Color);
 
             vm.MoveDown();
-            Assert.AreEqual(Color.White, vm.RowElements[3][2].Color);
-            Assert.AreEqual(testColor, vm.RowElements[9][2].Color);
+            Assert.AreEqual(Color.White, vm.Elements[3][2].Color);
+            Assert.AreEqual(testColor, vm.Elements[9][2].Color);
         }
     }
 }
