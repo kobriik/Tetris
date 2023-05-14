@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Tetris.ViewModels
+namespace Tetris.Utils
 {
     public class NotifyPropertyChanged : INotifyPropertyChanged
     {

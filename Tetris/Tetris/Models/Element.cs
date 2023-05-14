@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using Tetris.Utils;
-using Tetris.ViewModels;
 using Xamarin.Forms;
 
 namespace Tetris.Models
