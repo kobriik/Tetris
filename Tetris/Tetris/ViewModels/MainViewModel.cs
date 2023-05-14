@@ -23,7 +23,6 @@ namespace Tetris.ViewModels
         private readonly Timer timer = new Timer();
         private readonly Random rnd = new Random();
         private readonly int countEl = 10;
-        private readonly int countEl = 10;
         private bool runningElement;
         private int curPosX = 0;
         private int curPosY = 0;
@@ -67,7 +66,7 @@ namespace Tetris.ViewModels
             MoveDownCommand = new Command(x => MoveDown());
 
             //init elementů
-            Elements = Tetris.Models.Element.GenerateMatrix(10);
+            Elements = Tetris.Models.Element.GenerateMatrix(countEl);
 
             timer.Interval = 250;
             timer.Elapsed += Timer_Elapsed;
