@@ -67,16 +67,7 @@ namespace Tetris.ViewModels
             MoveDownCommand = new Command(x => MoveDown());
 
             //init elementů
-            Elements = new ObservableCollection<ObservableCollection<Models.Element>>();
-            for (int i = 0; i < countItemsY; i++)
-            {
-                var elements = new ObservableCollection<Models.Element>();
-                for (int j = 0; j < countItemsX; j++)
-                {
-                    elements.Add(new Models.Element());
-                }
-                Elements.Add(elements);
-            }
+            Elements = Tetris.Models.Element.GenerateMatrix(10);
 
             timer.Interval = 250;
             timer.Elapsed += Timer_Elapsed;

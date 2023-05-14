@@ -13,17 +13,7 @@ namespace Tests
 
         private MainViewModel Init(int x = 0, int y = 0)
         {
-            var rowElements = new ObservableCollection<ObservableCollection<Tetris.Models.Element>>();
-            for (int i = 0; i < 10; i++)
-            {
-                var elements = new ObservableCollection<Tetris.Models.Element>();
-                for (int j = 0; j < 10; j++)
-                {
-                    elements.Add(new Tetris.Models.Element());
-                }
-                rowElements.Add(elements);
-            }
-
+            var rowElements = Tetris.Models.Element.GenerateMatrix(10);
             rowElements[2][2].Color = testColor;
             rowElements[3][2].Color = testColor;
             rowElements[3][3].Color = testColor;
