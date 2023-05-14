@@ -311,7 +311,7 @@ namespace Tetris.ViewModels
                         //Element je na dně nebo nad jiným
                         if (curPosY == (countItemsY - 1) || IsElementBlocked(curPosX, curPosY + 1))
                         {
-                            //Zpracování, pokud dojde ke změně, prochází se rekurzivně celá struktura
+                            //Zpracování, pokud dojde ke změně, prochází se znovu celá struktura
                             if (ProcessElements(curPosX, curPosY))
                             {
                                 for (int y = countItemsY - 1; y > 0; y--)
@@ -320,6 +320,7 @@ namespace Tetris.ViewModels
                                     {
                                         if (ProcessElements(x, y))
                                         {
+                                            //opět byla změna a je potřeba začít znovu
                                             y = countItemsY - 1;
                                             x = 0;
                                         }
