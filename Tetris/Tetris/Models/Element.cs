@@ -6,14 +6,6 @@ namespace Tetris.Models
 {
     public class Element : NotifyPropertyChanged
     {
-        private int sizeX;
-
-        public int SizeX
-        {
-            get { return sizeX; }
-            set { SetProperty(ref sizeX, value); }
-        }
-
         private Color color;
 
         public Color Color
@@ -22,9 +14,8 @@ namespace Tetris.Models
             set { SetProperty(ref color, value); }
         }
 
-        public Element(int sizeX)
+        public Element()
         {
-            SizeX = sizeX;
             Color = StaticData.DefaultItemColor;
         }
     }

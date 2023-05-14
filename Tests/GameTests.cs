@@ -19,9 +19,9 @@ namespace Tests
                 var element = new ObservableCollection<Tetris.Models.Element>();
                 for (int j = 0; j < 10; j++)
                 {
-                    element.Add(new Tetris.Models.Element(100 / 10));
+                    element.Add(new Tetris.Models.Element());
                 }
-                rowElements.Add(new RowElement(100 / 10, element));
+                rowElements.Add(new RowElement(element));
             }
 
             rowElements[2].ColumnElements[2].Color = testColor;

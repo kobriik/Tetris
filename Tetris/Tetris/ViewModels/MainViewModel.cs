@@ -21,8 +21,6 @@ namespace Tetris.ViewModels
 
     public class MainViewModel : NotifyPropertyChanged
     {
-        private int contentWidth => (int)(App.Current.MainPage.Width);
-        private int contentHeight => (int)(App.Current.MainPage.Height - 100);  //Oříznuto o navigation bar
         private readonly Timer timer = new Timer();
         private readonly Random rnd = new Random();
         private readonly int countItemsY = 10;
@@ -46,34 +44,7 @@ namespace Tetris.ViewModels
             set { SetProperty(ref score, value); }
         }
 
-        private int scoreContentHeight;
-        public int ScoreContentHeight
-        {
-            get { return scoreContentHeight; }
-            set { SetProperty(ref scoreContentHeight, value); }
-        }
-
-        private int playContentHeight;
-        public int PlayContentHeight
-        {
-            get { return playContentHeight; }
-            set { SetProperty(ref playContentHeight, value); }
-        }
-
-        private int playContentWidth;
-        public int PlayContentWidth
-        {
-            get { return playContentWidth; }
-            set { SetProperty(ref playContentWidth, value); }
-        }
-
-        private int buttonsContentHeight;
-        public int ButtonsContentHeight
-        {
-            get { return buttonsContentHeight; }
-            set { SetProperty(ref buttonsContentHeight, value); }
-        }
-
+   
         ObservableCollection<RowElement> rowElements;
         public ObservableCollection<RowElement> RowElements
         {
@@ -97,13 +68,6 @@ namespace Tetris.ViewModels
             MoveRightCommand = new Command(x => MoveRight());
             MoveDownCommand = new Command(x => MoveDown());
 
-            //Příprava velikosti hrací plochy a plochy pro tlačítka a score
-            PlayContentHeight = (int)(contentHeight * 0.9);
-            PlayContentHeight = PlayContentHeight - 50 - (PlayContentHeight % countItemsY);
-            PlayContentWidth = contentWidth - (contentWidth % countItemsX);
-            ScoreContentHeight = 50;
-            ButtonsContentHeight = (int)(contentHeight) - PlayContentHeight - ScoreContentHeight - 20;
-
             //init elementů
             RowElements = new ObservableCollection<RowElement>();
             for (int i = 0; i < countItemsY; i++)
@@ -111,9 +75,9 @@ namespace Tetris.ViewModels
                 var element = new ObservableCollection<Models.Element>();
                 for (int j = 0; j < countItemsX; j++)
                 {
-                    element.Add(new Models.Element(playContentWidth / countItemsX));
+                    element.Add(new Models.Element());
                 }
-                RowElements.Add(new RowElement(playContentHeight / countItemsY, element));
+                RowElements.Add(new RowElement(element));
             }
 
             timer.Interval = 250;

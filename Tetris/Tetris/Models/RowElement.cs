@@ -5,13 +5,6 @@ namespace Tetris.Models
 {
     public class RowElement : NotifyPropertyChanged
     {
-        private int sizeY;
-        public int SizeY
-        {
-            get { return sizeY; }
-            set { SetProperty(ref sizeY, value); }
-        }
-
         ObservableCollection<Element> elements;
         public ObservableCollection<Element> ColumnElements
         {
@@ -19,9 +12,8 @@ namespace Tetris.Models
             set { SetProperty(ref elements, value); }
         }
 
-        public RowElement(int sizeY, ObservableCollection<Element> elements)
+        public RowElement(ObservableCollection<Element> elements)
         {
-            SizeY = sizeY;
             ColumnElements = elements;
         }
     }

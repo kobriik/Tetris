@@ -11,16 +11,16 @@
 
     <ContentPage.Content>
 
-        <Grid RowSpacing="0" Margin="0" Padding="0">
+        <Grid RowSpacing="0">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="{Binding ScoreContentHeight}" />
-                <RowDefinition Height="{Binding PlayContentHeight}" />
-                <RowDefinition Height="{Binding ButtonsContentHeight}" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="80" />
             </Grid.RowDefinitions>
 
-            <Frame Grid.Row="0" HasShadow="False" BorderColor="Black" Padding="15" Margin="0" HorizontalOptions="FillAndExpand" CornerRadius="0" VerticalOptions="CenterAndExpand">
-                <Label HorizontalOptions="CenterAndExpand">
+            <StackLayout Grid.Row="0">
+                <Label HorizontalOptions="CenterAndExpand" TextColor="Black" FontSize="Large">
                     <Label.FormattedText>
                         <FormattedString>
                             <Span Text="Score: "></Span>
@@ -28,22 +28,31 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-            </Frame>
-
-            <CollectionView Grid.Row="1" ItemsSource="{Binding RowElements}" HorizontalScrollBarVisibility="Never" Margin="0"  >
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <CollectionView ItemsSource="{Binding ColumnElements}" HorizontalScrollBarVisibility="Never" Margin="0" ItemsLayout="HorizontalList" HeightRequest="{Binding SizeY}"  >
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <Frame BackgroundColor="{Binding Color}" WidthRequest="{Binding SizeX}" Margin="0" Padding="0" CornerRadius="0" HasShadow="False">
-                                    </Frame>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+            </StackLayout>
+                        
+            <StackLayout Grid.Row="1" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
+                <StackLayout BindableLayout.ItemsSource="{Binding RowElements}" Spacing="1" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout BindableLayout.ItemsSource="{Binding ColumnElements}" Orientation="Horizontal" Spacing="1"  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid RowSpacing="0" ColumnSpacing="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <BoxView BackgroundColor="{Binding Color}"></BoxView>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+            </StackLayout>
 
             <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="1">
                 <Button Text="←" FontSize="Large" HorizontalOptions="FillAndExpand" CornerRadius="0" Command="{Binding MoveLeftCommand}"></Button>
